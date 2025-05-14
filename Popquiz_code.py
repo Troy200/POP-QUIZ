@@ -5,16 +5,20 @@ HEIGHT=500
 WIDTH=800
 
 time_left=10
-marque_rect=Rect( 0,0,800,80)
-timer_rect=Rect(680,150,100,100)
-skip_rect=Rect(680,260,100,200)
-question_rect=Rect(10,150,600,100)
-questions_file="POP_QUIZ/questions.txt"
-questions=[]
-answer_rect1=Rect(10,270,290,110)
-answer_rect2=Rect(310,270,290,110)
-answer_rect3=Rect(10,390,290,110)
-answer_rect4=Rect(310,390,290,110)
+game_over=False
+
+
+
+marque_rect = Rect(0, 0, 800, 80)
+timer_rect = Rect(680, 150, 100, 100)
+skip_rect = Rect(680, 260, 100, 200)
+question_rect = Rect(20, 150, 640, 100)
+questions_file="POP_QUIZ/questions.txt" 
+questions=[] 
+answer_rect1 = Rect(20, 270, 310, 100)
+answer_rect2 = Rect(350, 270, 310, 100)
+answer_rect3 = Rect(20, 390, 310, 100)
+answer_rect4 = Rect(350, 390, 310, 100)
 answerboxes=[answer_rect1,answer_rect2,answer_rect3,answer_rect4]
 def marque_move():
     marque_rect.x=marque_rect.x-5
@@ -36,6 +40,8 @@ def draw():
         screen.draw.filled_rect(answerbox,"blue")
         screen.draw.textbox(question[index].strip() , answerbox,color="white")
         index=index+1
+    if game_over:
+        screen.fill("dark green")
 
 
 
@@ -53,6 +59,47 @@ def questionsreader():
 
 def q_only_reader():
     return questions.pop(0).split(",")
+
+
+def on_mouse_down(pos):
+    global question, time_left
+    index=1
+    for ansbox in answerboxes:
+        if ansbox.collidepoint(pos):
+            if index==int(question[5]):
+                correct_answer()
+            else:
+                if questions:
+                    question=q_only_reader()
+                    time_left=10
+                else:
+                    gameover()
+        index+=1
+        
+    if skip_rect.collidepoint(pos):
+        if questions:
+            question=q_only_reader()
+            time_left=10
+        else:
+             gameover()
+
+
+def correct_answer():
+    global question, time_left
+    if questions:
+        question=q_only_reader()
+        time_left=10
+    else:
+        gameover()
+
+
+
+
+def gameover():
+    global game_over
+    game_over=True
+
+
 
 
 def update():
