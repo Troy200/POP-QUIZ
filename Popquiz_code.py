@@ -6,7 +6,7 @@ WIDTH=800
 
 time_left=10
 game_over=False
-
+score=0
 
 
 marque_rect = Rect(0, 0, 800, 80)
@@ -28,7 +28,7 @@ def marque_move():
 def draw():
     screen.fill("white")
     screen.draw.filled_rect(marque_rect,"white")
-    screen.draw.textbox("Welcome to the pop quizz! ", marque_rect,color="blue")
+    screen.draw.textbox("Welcome to the pop quizz! Score:{} ".format(score), marque_rect,color="blue")
     screen.draw.filled_rect(timer_rect,"blue")
     screen.draw.textbox(str(time_left),timer_rect,color="white")
     screen.draw.filled_rect(skip_rect,"blue")
@@ -85,10 +85,12 @@ def on_mouse_down(pos):
 
 
 def correct_answer():
-    global question, time_left
+    global question, time_left, score
+    score+=1
     if questions:
         question=q_only_reader()
         time_left=10
+        
     else:
         gameover()
 
